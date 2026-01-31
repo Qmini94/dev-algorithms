@@ -21,6 +21,7 @@ out/
 out/
 build/
 .gradle/
+.obsidian
 
 ### Eclipse ###
 .apt_generated
