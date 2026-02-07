@@ -42,16 +42,15 @@ public class CollisionRisk {
          */
         Map<Integer, List<int[]>> paths = new HashMap<>();
         for(int i = 0; i < routes.length; i++) {
-            /**
-             *  TODO: 현재 routes가 2가지로 고정된 경우로 처리됨. 2 ≤ routes[i]의 길이 = m ≤ 100로 추가 처리해야함.
-             */
-            int[] startPoint = points[routes[i][0] - 1].clone();
-            int[] endPoint = points[routes[i][1] - 1].clone();
-            List<int[]> movedPaths = new ArrayList<>();
-            while(!(startPoint[1] > endPoint[1])) {
-                movedPaths.add(startPoint.clone());
-                paths.put(i, movedPaths);
-                startPoint = movePointToNext(startPoint, endPoint);
+            for(int y = 1; y < routes[i].length; y++) {
+                int[] startPoint = points[routes[i][y - 1] - 1].clone();
+                int[] endPoint = points[routes[i][y] - 1].clone();
+                List<int[]> movedPaths = new ArrayList<>();
+                while(!(startPoint[1] > endPoint[1])) {
+                    movedPaths.add(startPoint.clone());
+                    paths.put(i, movedPaths);
+                    startPoint = movePointToNext(startPoint, endPoint);
+                }
             }
         }
 
