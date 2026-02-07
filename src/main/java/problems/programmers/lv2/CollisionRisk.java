@@ -48,7 +48,7 @@ public class CollisionRisk {
             int[] startPoint = points[routes[i][0] - 1].clone();
             int[] endPoint = points[routes[i][1] - 1].clone();
             List<int[]> movedPaths = new ArrayList<>();
-            while(!Arrays.equals(startPoint, endPoint)) {
+            while(!(startPoint[1] > endPoint[1])) {
                 movedPaths.add(startPoint.clone());
                 paths.put(i, movedPaths);
                 startPoint = movePointToNext(startPoint, endPoint);
@@ -62,17 +62,28 @@ public class CollisionRisk {
         int second = 0;
         while(!paths.isEmpty()) {
             Set<String> movedPoint = new HashSet<>();
+            Set<String>crashedPath = new HashSet<>();
             Iterator<Map.Entry<Integer, List<int[]>>> it = paths.entrySet().iterator();
+
             while (it.hasNext()) {
                 Map.Entry<Integer, List<int[]>> entry = it.next();
                 List<int[]> path = entry.getValue();
+
                 if(second < path.size()) {
-                    movedPoint.add(path.get(second)[0] + "," + path.get(second)[1]);
+                    String key = path.get(second)[0] + "," + path.get(second)[1];
+                    if(!movedPoint.contains(key)) {
+                        movedPoint.add(key);
+                    } else {
+                        crashedPath.add(key);
+                    }
                 } else {
                     it.remove();
                 }
             }
-            if(movedPoint.size() != paths.size()) count++;
+
+            if(movedPoint.size() != paths.size()) {
+                count = count + crashedPath.size();
+            }
             second++;
         }
 
@@ -89,7 +100,7 @@ public class CollisionRisk {
             startY = startY < endY ? startY + 1 : startY - 1;
             startPoint[0] = startY;
         } else {
-            startX = startX < endX ? startX + 1 : startX - 1;
+            startX = startX <= endX ? startX + 1 : startX - 1;
             startPoint[1] = startX;
         }
 
