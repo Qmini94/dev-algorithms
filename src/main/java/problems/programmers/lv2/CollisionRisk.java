@@ -1,5 +1,7 @@
 package problems.programmers.lv2;
 
+import java.util.*;
+
 /**
  * 문제 설명
  * 어떤 물류 센터는 로봇을 이용한 자동 운송 시스템을 운영합니다. 운송 시스템이 작동하는 규칙은 다음과 같습니다.
@@ -35,14 +37,62 @@ package problems.programmers.lv2;
 public class CollisionRisk {
     public int solution(int[][] points, int[][] routes) {
         /*
-         * TODO: routes를 반복문으로 돌며 각 points를 이동할때에 경로 좌표를 전부 map<int, int[][]> paths(key: routeIdx, 배열길이: second, paths[][]: 좌표)
-         *  를 담은 후에 배열길이 만큼 반복문을 돌며 각 초에서 충돌이 일어나는 횟수를 카운팅한다. (각 초에서 같은 좌표의 충돌 카운팅은 최대 1회로 제한한다)
-         *
-         * TODO: 이중 반복문을 사용하는게 맞아보임. 각 routes의 points의 차이를 절대값으로 구해 가장 큰 값(초당 1칸일때 제일 많이 이동하는)울 구한뒤
-         *  해당 값만큼 반복문을 돈다. map<int, int[][]> currentPaths, map<int, int[][]> finishPaths를 finishPaths와 같은 값을 만들기위해 0번째 배열부터
-         *  1씩만 변경한뒤 currentPaths의 int[][]가 같은 값이 있는지 체크해서 count를 +1한다.
+         * routes를 반복문으로 돌며 각 points를 이동할때에 경로 좌표를 전부 Map<Integer, List<int[]> paths(key: routeIdx, 배열길이: second, paths[y, x]: 좌표)
+         *  를 담은 후에 각 초에서 충돌이 일어나는 횟수를 카운팅한다. (각 초에서 같은 좌표의 충돌 카운팅은 최대 1회로 제한한다)
          */
-        int answer = 0;
-        return answer;
+        Map<Integer, List<int[]>> paths = new HashMap<>();
+        for(int i = 0; i < routes.length; i++) {
+            /**
+             *  TODO: 현재 routes가 2가지로 고정된 경우로 처리됨. 2 ≤ routes[i]의 길이 = m ≤ 100로 추가 처리해야함.
+             */
+            int[] startPoint = points[routes[i][0] - 1].clone();
+            int[] endPoint = points[routes[i][1] - 1].clone();
+            List<int[]> movedPaths = new ArrayList<>();
+            while(!Arrays.equals(startPoint, endPoint)) {
+                movedPaths.add(startPoint.clone());
+                paths.put(i, movedPaths);
+                startPoint = movePointToNext(startPoint, endPoint);
+            }
+        }
+
+        /**
+         * paths로 각 초(List의 length)에서 충돌이 일어나는 횟수를 카운팅한다. (각 초에서 같은 좌표의 충돌 카운팅은 최대 1회로 제한한다)
+         */
+        int count = 0;
+        int second = 0;
+        while(!paths.isEmpty()) {
+            Set<String> movedPoint = new HashSet<>();
+            Iterator<Map.Entry<Integer, List<int[]>>> it = paths.entrySet().iterator();
+            while (it.hasNext()) {
+                Map.Entry<Integer, List<int[]>> entry = it.next();
+                List<int[]> path = entry.getValue();
+                if(second < path.size()) {
+                    movedPoint.add(path.get(second)[0] + "," + path.get(second)[1]);
+                } else {
+                    it.remove();
+                }
+            }
+            if(movedPoint.size() != paths.size()) count++;
+            second++;
+        }
+
+        return count;
+    }
+
+    private int[] movePointToNext(int[] startPoint, int[] endPoint) {
+        int startY = startPoint[0];
+        int startX = startPoint[1];
+        int endY = endPoint[0];
+        int endX = endPoint[1];
+
+        if(startY != endY) {
+            startY = startY < endY ? startY + 1 : startY - 1;
+            startPoint[0] = startY;
+        } else {
+            startX = startX < endX ? startX + 1 : startX - 1;
+            startPoint[1] = startX;
+        }
+
+        return startPoint;
     }
 }
