@@ -42,16 +42,19 @@ public class CollisionRisk {
          */
         Map<Integer, List<int[]>> paths = new HashMap<>();
         for(int i = 0; i < routes.length; i++) {
+            List<int[]> movedPaths = new ArrayList<>();
             for(int y = 1; y < routes[i].length; y++) {
                 int[] startPoint = points[routes[i][y - 1] - 1].clone();
                 int[] endPoint = points[routes[i][y] - 1].clone();
-                List<int[]> movedPaths = new ArrayList<>();
-                while(!(startPoint[1] > endPoint[1])) {
+                while(!Arrays.equals(startPoint, endPoint)) {
                     movedPaths.add(startPoint.clone());
-                    paths.put(i, movedPaths);
                     startPoint = movePointToNext(startPoint, endPoint);
                 }
+                if(y == routes[i].length - 1) {
+                    movedPaths.add(endPoint.clone());
+                }
             }
+            paths.put(i, movedPaths);
         }
 
         /**
@@ -61,7 +64,7 @@ public class CollisionRisk {
         int second = 0;
         while(!paths.isEmpty()) {
             Set<String> movedPoint = new HashSet<>();
-            Set<String>crashedPath = new HashSet<>();
+            Set<String> crashedPath = new HashSet<>();
             Iterator<Map.Entry<Integer, List<int[]>>> it = paths.entrySet().iterator();
 
             while (it.hasNext()) {
@@ -80,7 +83,7 @@ public class CollisionRisk {
                 }
             }
 
-            if(movedPoint.size() != paths.size()) {
+            if(!crashedPath.isEmpty()) {
                 count = count + crashedPath.size();
             }
             second++;
@@ -99,7 +102,7 @@ public class CollisionRisk {
             startY = startY < endY ? startY + 1 : startY - 1;
             startPoint[0] = startY;
         } else {
-            startX = startX <= endX ? startX + 1 : startX - 1;
+            startX = startX < endX ? startX + 1 : startX - 1;
             startPoint[1] = startX;
         }
 
