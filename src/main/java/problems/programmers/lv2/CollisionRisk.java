@@ -35,11 +35,16 @@ import java.util.*;
  */
 
 public class CollisionRisk {
+    /*
+     * routes를 반복문으로 돌며 각 points를 이동할때에 경로 좌표를 전부
+     * 담은 후에 각 초에서 충돌이 일어나는 횟수를 카운팅한다. (각 초에서 같은 좌표의 충돌 카운팅은 최대 1회로 제한한다)
+     */
     public int solution(int[][] points, int[][] routes) {
-        /*
-         * routes를 반복문으로 돌며 각 points를 이동할때에 경로 좌표를 전부 Map<Integer, List<int[]> paths(key: routeIdx, 배열길이: second, paths[y, x]: 좌표)
-         *  를 담은 후에 각 초에서 충돌이 일어나는 횟수를 카운팅한다. (각 초에서 같은 좌표의 충돌 카운팅은 최대 1회로 제한한다)
-         */
+        Map<Integer, List<int[]>> paths = recordPaths(points, routes);
+        return getCollisionCount(paths);
+    }
+
+    private Map<Integer, List<int[]>> recordPaths(int[][] points, int[][] routes) {
         Map<Integer, List<int[]>> paths = new HashMap<>();
         for(int i = 0; i < routes.length; i++) {
             List<int[]> movedPaths = new ArrayList<>();
@@ -56,40 +61,7 @@ public class CollisionRisk {
             }
             paths.put(i, movedPaths);
         }
-
-        /**
-         * paths로 각 초(List의 length)에서 충돌이 일어나는 횟수를 카운팅한다. (각 초에서 같은 좌표의 충돌 카운팅은 최대 1회로 제한한다)
-         */
-        int count = 0;
-        int second = 0;
-        while(!paths.isEmpty()) {
-            Set<String> movedPoint = new HashSet<>();
-            Set<String> crashedPath = new HashSet<>();
-            Iterator<Map.Entry<Integer, List<int[]>>> it = paths.entrySet().iterator();
-
-            while (it.hasNext()) {
-                Map.Entry<Integer, List<int[]>> entry = it.next();
-                List<int[]> path = entry.getValue();
-
-                if(second < path.size()) {
-                    String key = path.get(second)[0] + "," + path.get(second)[1];
-                    if(!movedPoint.contains(key)) {
-                        movedPoint.add(key);
-                    } else {
-                        crashedPath.add(key);
-                    }
-                } else {
-                    it.remove();
-                }
-            }
-
-            if(!crashedPath.isEmpty()) {
-                count = count + crashedPath.size();
-            }
-            second++;
-        }
-
-        return count;
+        return paths;
     }
 
     private int[] movePointToNext(int[] startPoint, int[] endPoint) {
@@ -107,5 +79,40 @@ public class CollisionRisk {
         }
 
         return startPoint;
+    }
+
+    /**
+     * paths로 각 초(List의 length)에서 충돌이 일어나는 횟수를 카운팅한다. (각 초에서 같은 좌표의 충돌 카운팅은 최대 1회로 제한한다)
+     */
+    private int getCollisionCount(Map<Integer, List<int[]>> paths) {
+        int count = 0;
+        int second = 0;
+        while(!paths.isEmpty()) {
+            Set<Integer> movedPoint = new HashSet<>();
+            Set<Integer> crashedPath = new HashSet<>();
+            Iterator<Map.Entry<Integer, List<int[]>>> it = paths.entrySet().iterator();
+
+            while (it.hasNext()) {
+                Map.Entry<Integer, List<int[]>> entry = it.next();
+                List<int[]> path = entry.getValue();
+
+                if(second < path.size()) {
+                    int key = path.get(second)[0] * 101 + path.get(second)[1];
+                    if(!movedPoint.contains(key)) {
+                        movedPoint.add(key);
+                    } else {
+                        crashedPath.add(key);
+                    }
+                } else {
+                    it.remove();
+                }
+            }
+
+            if(!crashedPath.isEmpty()) {
+                count = count + crashedPath.size();
+            }
+            second++;
+        }
+        return count;
     }
 }
