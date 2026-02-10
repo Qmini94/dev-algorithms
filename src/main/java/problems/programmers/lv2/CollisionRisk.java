@@ -46,16 +46,20 @@ public class CollisionRisk {
 
     private Map<Integer, List<int[]>> recordPaths(int[][] points, int[][] routes) {
         Map<Integer, List<int[]>> paths = new HashMap<>();
-        for(int i = 0; i < routes.length; i++) {
+
+        for (int i = 0; i < routes.length; i++) {
             List<int[]> movedPaths = new ArrayList<>();
-            for(int y = 1; y < routes[i].length; y++) {
+
+            for (int y = 1; y < routes[i].length; y++) {
                 int[] startPoint = points[routes[i][y - 1] - 1].clone();
                 int[] endPoint = points[routes[i][y] - 1].clone();
-                while(!Arrays.equals(startPoint, endPoint)) {
+
+                while (!Arrays.equals(startPoint, endPoint)) {
                     movedPaths.add(startPoint.clone());
                     startPoint = movePointToNext(startPoint, endPoint);
                 }
-                if(y == routes[i].length - 1) {
+
+                if (y == routes[i].length - 1) {
                     movedPaths.add(endPoint.clone());
                 }
             }
@@ -70,14 +74,13 @@ public class CollisionRisk {
         int endY = endPoint[0];
         int endX = endPoint[1];
 
-        if(startY != endY) {
+        if (startY != endY) {
             startY = startY < endY ? startY + 1 : startY - 1;
             startPoint[0] = startY;
         } else {
             startX = startX < endX ? startX + 1 : startX - 1;
             startPoint[1] = startX;
         }
-
         return startPoint;
     }
 
@@ -87,7 +90,8 @@ public class CollisionRisk {
     private int getCollisionCount(Map<Integer, List<int[]>> paths) {
         int count = 0;
         int second = 0;
-        while(!paths.isEmpty()) {
+
+        while (!paths.isEmpty()) {
             Set<Integer> movedPoint = new HashSet<>();
             Set<Integer> crashedPath = new HashSet<>();
             Iterator<Map.Entry<Integer, List<int[]>>> it = paths.entrySet().iterator();
@@ -96,9 +100,10 @@ public class CollisionRisk {
                 Map.Entry<Integer, List<int[]>> entry = it.next();
                 List<int[]> path = entry.getValue();
 
-                if(second < path.size()) {
+                if (second < path.size()) {
                     int key = path.get(second)[0] * 101 + path.get(second)[1];
-                    if(!movedPoint.contains(key)) {
+
+                    if (!movedPoint.contains(key)) {
                         movedPoint.add(key);
                     } else {
                         crashedPath.add(key);
@@ -108,7 +113,7 @@ public class CollisionRisk {
                 }
             }
 
-            if(!crashedPath.isEmpty()) {
+            if (!crashedPath.isEmpty()) {
                 count = count + crashedPath.size();
             }
             second++;
