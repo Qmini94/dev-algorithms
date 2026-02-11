@@ -30,11 +30,11 @@ package problems.programmers.lv2;
  * #2	40%	info의 길이 ≤ 20
  * #3	45%	추가 제한 사항 없음
  * 입출력 예
- * info	n	m	result
- * [[1, 2], [2, 3], [2, 1]]	4	4	2
- * [[1, 2], [2, 3], [2, 1]]	1	7	0
- * [[3, 3], [3, 3]]	7	1	6
- * [[3, 3], [3, 3]]	6	1	-1
+ * info	                        n	    m	    result
+ * [[1, 2], [2, 3], [2, 1]]	    4	    4	    2
+ * [[1, 2], [2, 3], [2, 1]]	    1	    7	    0
+ * [[3, 3], [3, 3]]	            7	    1	    6
+ * [[3, 3], [3, 3]]	            6	    1	    -1
  * 입출력 예 설명
  * 입출력 예 #1
  *
@@ -57,6 +57,10 @@ package problems.programmers.lv2;
  * 따라서 -1을 return 해야 합니다.
  */
 public class PerfectCrime {
+    /**
+     * B도둑의 흔적 개수를 경찰에게 붙잡히지 않는 최대개수를 만들 수 있는 info배열을 제외한뒤 A도둑의  흔적 최솟값 구하기.
+     * 어떤 방법으로도 두 도둑 모두 붙잡힌다면 -1 반환.
+     */
     public int solution(int[][] info, int n, int m) {
         int answer = 0;
         return answer;
