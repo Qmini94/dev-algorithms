@@ -20,12 +20,12 @@ jobs:
         uses: actions/checkout@v4
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          
+
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: '3.x'
-          
+
       - name: Generate problem list
         run: |
           python3 << 'EOF'
@@ -33,12 +33,12 @@ jobs:
           from pathlib import Path
           from collections import defaultdict
           
-          # 경로 설정
-          base_path = Path('.')
-          src_main = base_path / 'src' / 'main' / 'java' / 'problems' / 'programmers'
-          src_test = base_path / 'src' / 'test' / 'java' / 'problems' / 'programmers'
-          docs_path = base_path / 'docs' / 'problems' / 'programmers'
-          output_file = base_path / 'problems' / 'programmers.md'
+          # 경로 설정 (저장소 루트 = 현재 디렉토리)
+          repo_root = Path.cwd()
+          src_main = repo_root / 'src' / 'main' / 'java' / 'problems' / 'programmers'
+          src_test = repo_root / 'src' / 'test' / 'java' / 'problems' / 'programmers'
+          docs_path = repo_root / 'docs' / 'problems' / 'programmers'
+          output_file = repo_root / 'problems' / 'programmers.md'
           
           # 레벨별로 파일 수집
           problems = defaultdict(lambda: {'solution': None, 'test': None, 'doc': None})
@@ -51,7 +51,9 @@ jobs:
                       for java_file in sorted(level_dir.glob('*.java')):
                           problem_name = java_file.stem
                           key = f"{level}:{problem_name}"
-                          problems[key]['solution'] = str(java_file.relative_to(base_path))
+                          # 저장소 루트 기준 상대 경로
+                          rel_path = java_file.relative_to(repo_root)
+                          problems[key]['solution'] = str(rel_path)
                           problems[key]['level'] = level
                           problems[key]['name'] = problem_name
           
@@ -63,7 +65,9 @@ jobs:
                       for java_file in sorted(level_dir.glob('*Test.java')):
                           problem_name = java_file.stem.replace('Test', '')
                           key = f"{level}:{problem_name}"
-                          problems[key]['test'] = str(java_file.relative_to(base_path))
+                          # 저장소 루트 기준 상대 경로
+                          rel_path = java_file.relative_to(repo_root)
+                          problems[key]['test'] = str(rel_path)
                           if 'level' not in problems[key]:
                               problems[key]['level'] = level
                               problems[key]['name'] = problem_name
@@ -76,7 +80,9 @@ jobs:
                       for md_file in sorted(level_dir.glob('*.md')):
                           problem_name = md_file.stem
                           key = f"{level}:{problem_name}"
-                          problems[key]['doc'] = str(md_file.relative_to(base_path))
+                          # 저장소 루트 기준 상대 경로
+                          rel_path = md_file.relative_to(repo_root)
+                          problems[key]['doc'] = str(rel_path)
                           if 'level' not in problems[key]:
                               problems[key]['level'] = level
                               problems[key]['name'] = problem_name
@@ -88,34 +94,34 @@ jobs:
               f.write('# Programmers 문제 목록\n\n')
               f.write('> 자동 생성된 문제 목록입니다. 수동으로 편집하지 마세요.\n\n')
               f.write('---\n\n')
-              
+          
               # 레벨별로 그룹화
               levels = defaultdict(list)
               for key, data in problems.items():
                   level = data.get('level', 'UNKNOWN')
                   levels[level].append(data)
-              
+          
               # 레벨 순서대로 정렬
               level_order = ['LV0', 'LV1', 'LV2', 'LV3', 'LV4', 'LV5']
-              
+          
               for level in level_order:
                   if level not in levels:
                       continue
-                  
+          
                   f.write(f'## {level}\n\n')
                   f.write('| 문제명 | 풀이 | 테스트 | 문서 |\n')
                   f.write('|--------|------|--------|------|\n')
-                  
+          
                   for data in sorted(levels[level], key=lambda x: x['name']):
                       name = data['name']
                       solution_link = f"[📝]({data['solution']})" if data['solution'] else '-'
                       test_link = f"[🧪]({data['test']})" if data['test'] else '-'
                       doc_link = f"[📖]({data['doc']})" if data['doc'] else '-'
-                      
+          
                       f.write(f'| {name} | {solution_link} | {test_link} | {doc_link} |\n')
-                  
+          
                   f.write('\n')
-              
+          
               # 통계 추가
               f.write('---\n\n')
               f.write('## 📊 통계\n\n')
@@ -123,12 +129,12 @@ jobs:
               total_with_solution = sum(1 for p in problems.values() if p['solution'])
               total_with_test = sum(1 for p in problems.values() if p['test'])
               total_with_doc = sum(1 for p in problems.values() if p['doc'])
-              
+          
               f.write(f'- 전체 문제: {total_problems}개\n')
               f.write(f'- 풀이 완료: {total_with_solution}개\n')
               f.write(f'- 테스트 작성: {total_with_test}개\n')
               f.write(f'- 문서화 완료: {total_with_doc}개\n')
-              
+          
               if total_problems > 0:
                   completion_rate = (total_with_doc / total_problems) * 100
                   f.write(f'- 문서화율: {completion_rate:.1f}%\n')
@@ -136,12 +142,12 @@ jobs:
           print(f"✅ {output_file} 생성 완료!")
           print(f"📝 총 {len(problems)}개 문제 수집")
           EOF
-          
+
       - name: Check if there are changes
         id: check_changes
         run: |
           git diff --quiet problems/programmers.md || echo "changed=true" >> $GITHUB_OUTPUT
-          
+
       - name: Commit and push if changed
         if: steps.check_changes.outputs.changed == 'true'
         run: |
