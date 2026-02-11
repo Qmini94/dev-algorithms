@@ -8,7 +8,7 @@
 
 | 문제명 | 풀이 | 테스트 | 문서 |
 |--------|------|--------|------|
-| CollisionRisk | [📝](src/main/java/problems/programmers/lv2/CollisionRisk.java) | [🧪](src/test/java/problems/programmers/lv2/CollisionRiskTest.java) | [📖](docs/problems/programmers/Lv2/CollisionRisk.md) |
+| CollisionRisk | [📝](/src/main/java/problems/programmers/lv2/CollisionRisk.java) | [🧪](/src/test/java/problems/programmers/lv2/CollisionRiskTest.java) | [📖](/docs/problems/programmers/Lv2/CollisionRisk.md) |
 
 ---
 
