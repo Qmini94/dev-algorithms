@@ -57,10 +57,8 @@ package problems.programmers.lv2;
  * 따라서 -1을 return 해야 합니다.
  */
 public class PerfectCrime {
-    class Solution {
-        public int solution(int[][] info, int n, int m) {
-            int answer = 0;
-            return answer;
-        }
+    public int solution(int[][] info, int n, int m) {
+        int answer = 0;
+        return answer;
     }
 }
