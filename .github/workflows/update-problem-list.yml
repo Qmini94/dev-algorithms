@@ -14,7 +14,7 @@ on:
 jobs:
   update-list:
     runs-on: ubuntu-latest
-
+    
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -123,9 +123,10 @@ jobs:
           
                       for data in sorted(levels[level], key=lambda x: x['name']):
                           name = data['name']
-                          solution_link = f"[📝]({data['solution']})" if data['solution'] else '-'
-                          test_link = f"[🧪]({data['test']})" if data['test'] else '-'
-                          doc_link = f"[📖]({data['doc']})" if data['doc'] else '-'
+                          # GitHub 절대 경로 (/ 로 시작)
+                          solution_link = f"[📝](/{data['solution']})" if data['solution'] else '-'
+                          test_link = f"[🧪](/{data['test']})" if data['test'] else '-'
+                          doc_link = f"[📖](/{data['doc']})" if data['doc'] else '-'
           
                           f.write(f'| {name} | {solution_link} | {test_link} | {doc_link} |\n')
           
