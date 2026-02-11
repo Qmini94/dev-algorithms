@@ -9,6 +9,7 @@ on:
       - 'src/main/java/problems/programmers/**'
       - 'src/test/java/problems/programmers/**'
       - 'docs/problems/programmers/**'
+  workflow_dispatch:  # 수동 실행 가능!
 
 jobs:
   update-list:
