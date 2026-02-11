@@ -26,7 +26,7 @@ java + JUnit 기반으로 코딩테스트 문제를 TDD로 풀이하고,
 ### Programmers
 - [Programmers 문제 목록](problems/programmers/)
 
-> 문제를 풀 때마다 `docs/note/problem-template.md`를 복사해서 `problems/` 아래에 저장하고 기록합니다.
+> 문제를 풀 때마다 `problems/` 아래에 저장하고 기록합니다.
 
 ---
 
