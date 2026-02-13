@@ -1,5 +1,9 @@
 package problems.programmers.lv2;
 
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+
 /**
  * 문제 설명
  * A도둑과 B도둑이 팀을 이루어 모든 물건을 훔치려고 합니다. 단, 각 도둑이 물건을 훔칠 때 남기는 흔적이 누적되면 경찰에 붙잡히기 때문에, 두 도둑 중 누구도 경찰에 붙잡히지 않도록 흔적을 최소화해야 합니다.
@@ -62,7 +66,86 @@ public class PerfectCrime {
      * 어떤 방법으로도 두 도둑 모두 붙잡힌다면 -1 반환.
      */
     public int solution(int[][] info, int n, int m) {
-        int answer = 0;
-        return answer;
+        /**
+         * info에서 도둑B의 흔적을 기준으로 desc로 sort한다.
+         */
+        sortByBDesc(info);
+        exceptThiefBEvidence(info, m);
+
+        /**
+         * 남은info의 값의 도둑A의 흔적을 더해 리턴한다. 단, n이상이라면 -1을 반환한다. 없으면 0;
+         */
+
+
+        return -1;
+    }
+
+
+    /**
+     * 도둑B를 기준으로 m > count의 조건이 될 수있는 최대값을 구한다.
+     * int diff = 1; 선언뒤에 desc로 정렬된 info를 순서대로 더하며 값을 저장한다. m-diff과 동일한 수가 나올때 까지 더하며 안되면
+     * 반복문을 다음 배열부터 다시돈다. 끝까지 돌아도 안될시 diff++; 하고 다시 돌려 도둑B의 최대값을 구하면 해당 배열을 pop한다.
+     */
+    private int[][] exceptThiefBEvidence(int[][] info, int m) {
+        int n = info.length;
+        if (n == 0) return info;
+
+        int diff = 1;
+
+        // diff가 커질수록 target = m - diff가 작아짐.
+        // target <= 0이면 의미 없음 (B 흔적이 0 이하로 맞춰라? 불가능/무의미)
+        while (diff < m) {
+            int target = m - diff;
+
+            for (int start = 0; start < n; start++) {
+                int count = 0;
+                Set<Integer> useIdx = new HashSet<>();
+
+                // 네 방식: start부터 끝까지 "쭉 더하기"
+                for (int i = start; i < n; i++) {
+                    count += info[i][1];
+                    useIdx.add(i);
+
+                    // 딱 맞으면 종료
+                    if (count == target) {
+                        return removeIndices(info, useIdx);
+                    }
+
+                    // 오버하면 이 start는 가망 없음 (B가 전부 양수니까)
+                    if (count > target) {
+                        break;
+                    }
+                }
+            }
+
+            // start 전부 실패 → diff++
+            diff++;
+        }
+
+        // 끝까지 못 찾음: 네 계획대로면 "제외할 게 없음"이니 원본 반환
+        return info;
+    }
+
+    /** info에서 remove에 포함된 인덱스들을 제외하고 새 배열 리턴 */
+    private int[][] removeIndices(int[][] info, Set<Integer> remove) {
+        int newSize = info.length - remove.size();
+        if (newSize <= 0) return new int[0][2];
+
+        int[][] result = new int[newSize][2];
+        int idx = 0;
+
+        for (int i = 0; i < info.length; i++) {
+            if (remove.contains(i)) continue;
+            result[idx][0] = info[i][0];
+            result[idx][1] = info[i][1];
+            idx++;
+        }
+
+        return result;
+    }
+
+    /** B 기준 내림차순 정렬 */
+    private void sortByBDesc(int[][] info) {
+        Arrays.sort(info, (a, b) -> Integer.compare(b[1], a[1]));
     }
 }
