@@ -19,7 +19,7 @@ java + JUnit 기반으로 코딩테스트 문제를 TDD로 풀이하고,
 ## Docs
 
 - [왜 알고리즘을 사용할까](docs/note/why-algorithms.md)
-- [빅O(Big-O) 표기법](docs/note/big-o.md)
+- [빅O(Big-O) 표기법](Big_O.md)
 
 ---
 

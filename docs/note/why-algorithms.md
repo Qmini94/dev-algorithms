@@ -238,4 +238,4 @@ for (int coin : coins) {
 
 
 **관련 문서**:
-- [빅O(Big-O) 표기법](big-o.md)
+- [빅O(Big-O) 표기법](Big_O.md)
