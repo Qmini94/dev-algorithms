@@ -42,8 +42,8 @@
 시간복잡도  
 -  두개의 배열이라 이중반복문을 사용해서 O(n^2)으로 구현할 수도 있지만. 공부한 내용에서 이런 경우 HashMap을 활용하여 O(n)으로 구현 가능하다는점을 인지.
 
-한계점  
--  
+구현 시 아쉬웠던 점.
+-  풀이 방식을 잘못 생각해서 완료자를 map에 담는 것이 아니라 참가자를 map에 담아서 구현중에 당황하며 시간을 허비함. 
 
 ```java
 public String solution(String[] participant, String[] completion) {  
