@@ -37,16 +37,43 @@
 ## 1차 접근 (브루트포스)
 
 아이디어  
--  두개의 배열을 비교해야하는데 문자열이기 때문에 HashMap에 참가자 전체를 담아서 완주한 사람들을 반복문을 돌리면서 참가자 전체 HashMap을 방문하면서 Key값을 True로 변환한다. 최종적으로 Key가 False인 참가자를 리턴한다.
+-  두개의 배열을 비교해야하는데 문자열이기 때문에 HashMap에 완료자 전체를 담으면서 동명이인일 경우 value값에 완주한 동명이인 수 만큼 더한다. 참가자 전체를 반복문을 돌리면서 완주자에 없다면 해당 이름의 value가 0이면 리턴 아니라면 -1 
 
 시간복잡도  
--  두개의 배열이라 이중반복문을 사용해서 O(n^2)으로 구현할 수도 있지만. 공부한 내용에서 이런 경우 HashMap을 활용하여 O(n)으로 구현 가능하다는점을 인지했었음.
+-  두개의 배열이라 이중반복문을 사용해서 O(n^2)으로 구현할 수도 있지만. 공부한 내용에서 이런 경우 HashMap을 활용하여 O(n)으로 구현 가능하다는점을 인지.
 
 한계점  
 -  
 
 ```java
-
+public String solution(String[] participant, String[] completion) {  
+    Map<String, Integer> completionMap = new HashMap<>();  
+    String UnfinishedName = "";  
+  
+    /**  
+     *  완주자를 map에 답는다. 엣지케이스를 생각해서 value값에 동명이인일 경우 +1  
+     */    for (String name : completion) {  
+        if (completionMap.containsKey(name)) {  
+            completionMap.put(name, completionMap.get(name) + 1);  
+        } else {  
+            completionMap.put(name, 1);  
+        }  
+    }  
+  
+    /**  
+     * 참가자 배열을 인덱스로 돌면서 완주자에 없다면 바로 return하거나 동명이인일 경우 -1  
+     * 해당 이름에 완주자가 없어 0이라면 return  
+     */    for (int i = 0; i < participant.length; i++) {  
+        if (!completionMap.containsKey(participant[i])) return participant[i];  
+  
+        if(completionMap.get(participant[i]) != 0) {  
+            completionMap.put(participant[i], completionMap.get(participant[i]) - 1);  
+        } else {  
+            UnfinishedName = participant[i];  
+        }  
+    }  
+    return UnfinishedName;  
+}
 ```
 
 ---
