@@ -4,6 +4,12 @@
 
 ---
 
+## LV1
+
+| 문제명 | 풀이 | 테스트 | 문서 |
+|--------|------|--------|------|
+| UnfinishedRunner | [📝](/src/main/java/problems/programmers/lv1/UnfinishedRunner.java) | [🧪](/src/test/java/problems/programmers/lv1/UnfinishedRunnerTest.java) | [📖](/docs/problems/programmers/Lv1/UnfinishedRunner.md) |
+
 ## LV2
 
 | 문제명 | 풀이 | 테스트 | 문서 |
@@ -15,8 +21,8 @@
 
 ## 📊 통계
 
-- 전체 문제: 2개
-- 풀이 완료: 2개
-- 테스트 작성: 2개
-- 문서화 완료: 2개
+- 전체 문제: 3개
+- 풀이 완료: 3개
+- 테스트 작성: 3개
+- 문서화 완료: 3개
 - 문서화율: 100.0%
