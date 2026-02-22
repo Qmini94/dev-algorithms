@@ -506,6 +506,9 @@ Collections.sort(list, Collections.reverseOrder());  // 내림차순
 int[][] intervals = {{3,6}, {1,4}, {2,8}};
 Arrays.sort(intervals, (a, b) -> a[0] - b[0]);  // 첫번째 값 기준 오름차순
 // 결과: {{1,4}, {2,8}, {3,6}}
+
+// 배열 자르기
+int[] cut = Arrays.copyOfRange(array, i, j);
 ```
 
 ### 예시: 겹치는 구간 합치기
@@ -698,6 +701,13 @@ map.put("key", 1);             // 추가
 map.get("key");                // 조회
 map.getOrDefault("key", 0);    // 없으면 기본값
 map.containsKey("key");        // 존재 여부
+
+// Set (HashSet) 
+Set<Integer> set = new HashSet<>(); 
+set.add(1); // 추가 (중복이면 무시) 
+set.contains(1); // 존재 여부 
+set.remove(1); // 삭제 
+set.size(); // 크기
 
 // 스택
 Stack<Integer> stack = new Stack<>();
