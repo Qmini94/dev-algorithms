@@ -740,4 +740,52 @@ Math.pow(2, 3);                // 거듭제곱
 // 최대/최소 초기값
 int max = Integer.MIN_VALUE;   // -2147483648
 int min = Integer.MAX_VALUE;   //  2147483647
+
+// ===== 약수/배수/소수 패턴 =====
+
+// 약수 구하기 (√n 공식)
+List<Integer> divisors = new ArrayList<>();
+for (int i = 1; i * i <= num; i++) {
+    if (num % i == 0) {
+        divisors.add(i);
+        if (i != num / i) divisors.add(num / i);
+    }
+}
+
+// 최대공약수 (GCD) - 유클리드 호제법
+int gcd(int a, int b) {
+    while (b != 0) {
+        int temp = b;
+        b = a % b;
+        a = temp;
+    }
+    return a;
+}
+
+// 최소공배수 (LCM)
+int lcm(int a, int b) {
+    return a / gcd(a, b) * b;
+}
+
+// 소수 판별
+boolean isPrime(int n) {
+    if (n < 2) return false;
+    for (int i = 2; i * i <= n; i++) {
+        if (n % i == 0) return false;
+    }
+    return true;
+}
+
+// 에라토스테네스의 체 (1~n까지 소수 나열)
+boolean[] sieve = new boolean[n + 1];
+Arrays.fill(sieve, true);
+sieve[0] = sieve[1] = false;
+for (int i = 2; i * i <= n; i++) {
+    if (sieve[i]) {
+        for (int j = i * i; j <= n; j += i) {
+            sieve[j] = false;
+        }
+    }
+}
+// sieve[i] == true면 소수
 ```
