@@ -9,24 +9,25 @@ java + JUnit 기반으로 코딩테스트 문제를 TDD로 풀이하고,
 
 - `src/main/java` : 문제 풀이 코드(솔루션)
 - `src/test/java` : JUnit 테스트(TDD)
-- `docs/` : 알고리즘 개념 정리 및 공통 템플릿
-- `problems/` : 문제별 풀이 문서 (템플릿 기반으로 누적)
+- `docs/note/` : 알고리즘 개념 정리 및 공통 템플릿
+- `docs/problems/` : 문제별 풀이 문서 (템플릿 기반으로 누적)
+- `docs/template/` : 문제 풀이 문서 템플릿
+- `problems/programmers` : 문제 풀이 목록
 
 ---
 
 ## Docs
 
-- [왜 알고리즘을 사용할까](docs/note/why-algorithms.md)
-- [빅O(Big-O) 표기법](docs/note/big-o.md)
+- [빅O(Big-O) 표기법](docs/note/Big_O.md)
 
 ---
 
 ## Problems
 
 ### Programmers
-- [Programmers 문제 목록](problems/programmers/)
+- [Programmers 문제 목록](problems/programmers.md)
 
-> 문제를 풀 때마다 `docs/note/problem-template.md`를 복사해서 `problems/` 아래에 저장하고 기록합니다.
+> 문제를 풀 때마다 `problems/` 아래에 저장하고 기록합니다.
 
 ---
 

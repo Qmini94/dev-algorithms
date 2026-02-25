@@ -1,5 +1,7 @@
 package problems.programmers.lv2;
 
+import java.util.*;
+
 /**
  * 문제 설명
  * 어떤 물류 센터는 로봇을 이용한 자동 운송 시스템을 운영합니다. 운송 시스템이 작동하는 규칙은 다음과 같습니다.
@@ -26,22 +28,95 @@ package problems.programmers.lv2;
  * 같은 포인트를 연속으로 방문하는 입력은 주어지지 않습니다.
  * 1 ≤ routes[i][j] ≤ n
  * 입출력 예
- * points	routes	result
- * [[3, 2], [6, 4], [4, 7], [1, 4]]	[[4, 2], [1, 3], [2, 4]]	1
- * [[3, 2], [6, 4], [4, 7], [1, 4]]	[[4, 2], [1, 3], [4, 2], [4, 3]]	9
- * [[2, 2], [2, 3], [2, 7], [6, 6], [5, 2]]	[[2, 3, 4, 5], [1, 3, 4, 5]]	0
+ * points	                                  | routes	                              |  result
+ * [[3, 2], [6, 4], [4, 7], [1, 4]]	          |  [[4, 2], [1, 3], [2, 4]]	          |  1
+ * [[3, 2], [6, 4], [4, 7], [1, 4]]	          |  [[4, 2], [1, 3], [4, 2], [4, 3]]	  |  9
+ * [[2, 2], [2, 3], [2, 7], [6, 6], [5, 2]]	  |  [[2, 3, 4, 5], [1, 3, 4, 5]]	      |  0
  */
-
 public class CollisionRisk {
+    /*
+     * routes를 반복문으로 돌며 각 points를 이동할때에 경로 좌표를 전부
+     * 담은 후에 각 초에서 충돌이 일어나는 횟수를 카운팅한다. (각 초에서 같은 좌표의 충돌 카운팅은 최대 1회로 제한한다)
+     */
     public int solution(int[][] points, int[][] routes) {
-        // TODO:
-        // 1) 각 로봇의 전체 이동 경로를 시간순 좌표 리스트로 펼친다.
-        //    - 포인트 번호 p는 points[p-1]로 접근 (1-based -> 0-based)
-        //    - 다음 포인트로 갈 때 r 먼저 맞추고, 그 다음 c를 맞춘다.
-        // 2) 매 시간 t마다 로봇들의 현재 좌표를 카운팅해서
-        //    같은 좌표에 2대 이상이면 그 좌표를 위험 1회로 누적한다.
-        // 3) 모든 로봇이 종료될 때까지 반복한다.
-        int answer = 0;
-        return answer;
+        Map<Integer, List<int[]>> paths = recordPaths(points, routes);
+        return getCollisionCount(paths);
+    }
+
+    private Map<Integer, List<int[]>> recordPaths(int[][] points, int[][] routes) {
+        Map<Integer, List<int[]>> paths = new HashMap<>();
+
+        for (int i = 0; i < routes.length; i++) {
+            List<int[]> movedPaths = new ArrayList<>();
+
+            for (int y = 1; y < routes[i].length; y++) {
+                int[] startPoint = points[routes[i][y - 1] - 1].clone();
+                int[] endPoint = points[routes[i][y] - 1].clone();
+
+                while (!Arrays.equals(startPoint, endPoint)) {
+                    movedPaths.add(startPoint.clone());
+                    startPoint = movePointToNext(startPoint, endPoint);
+                }
+
+                if (y == routes[i].length - 1) {
+                    movedPaths.add(endPoint.clone());
+                }
+            }
+            paths.put(i, movedPaths);
+        }
+        return paths;
+    }
+
+    private int[] movePointToNext(int[] startPoint, int[] endPoint) {
+        int startY = startPoint[0];
+        int startX = startPoint[1];
+        int endY = endPoint[0];
+        int endX = endPoint[1];
+
+        if (startY != endY) {
+            startY = startY < endY ? startY + 1 : startY - 1;
+            startPoint[0] = startY;
+        } else {
+            startX = startX < endX ? startX + 1 : startX - 1;
+            startPoint[1] = startX;
+        }
+        return startPoint;
+    }
+
+    /**
+     * paths로 각 초(List의 length)에서 충돌이 일어나는 횟수를 카운팅한다. (각 초에서 같은 좌표의 충돌 카운팅은 최대 1회로 제한한다)
+     */
+    private int getCollisionCount(Map<Integer, List<int[]>> paths) {
+        int count = 0;
+        int second = 0;
+
+        while (!paths.isEmpty()) {
+            Set<Integer> movedPoint = new HashSet<>();
+            Set<Integer> crashedPath = new HashSet<>();
+            Iterator<Map.Entry<Integer, List<int[]>>> it = paths.entrySet().iterator();
+
+            while (it.hasNext()) {
+                Map.Entry<Integer, List<int[]>> entry = it.next();
+                List<int[]> path = entry.getValue();
+
+                if (second < path.size()) {
+                    int key = path.get(second)[0] * 101 + path.get(second)[1];
+
+                    if (!movedPoint.contains(key)) {
+                        movedPoint.add(key);
+                    } else {
+                        crashedPath.add(key);
+                    }
+                } else {
+                    it.remove();
+                }
+            }
+
+            if (!crashedPath.isEmpty()) {
+                count = count + crashedPath.size();
+            }
+            second++;
+        }
+        return count;
     }
 }
